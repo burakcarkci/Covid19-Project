@@ -49,5 +49,6 @@ dependencies {
     //Picasso for photo
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 }
