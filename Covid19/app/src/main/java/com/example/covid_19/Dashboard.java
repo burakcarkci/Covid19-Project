@@ -3,13 +3,11 @@ package com.example.covid_19;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,13 +21,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Dashboard extends AppCompatActivity {
 
     SearchView countries;
-    Button news, stats;
-    TextView statsResults, newsResults;
+    Button news, stats, searchButton;
+    TextView statsResults, newsResults, dataByCountryResults;
 
+    //Variables for News API
     public static String country = "us";
     public static String keyword = "coronavirus";
     public static String page_size = "99";
     public static String api_key = "cc0ab105fa8d477f82239da2e98fe95b";
+
+    //Variables for Country Data API
+    public static String from = "2020-04-28";
+    public static  String to = "2020-04-29";
 
 
     @Override
@@ -41,6 +44,8 @@ public class Dashboard extends AppCompatActivity {
         news = findViewById(R.id.news);
         stats = findViewById(R.id.stats);
         statsResults = findViewById(R.id.statsResults);
+        dataByCountryResults = findViewById(R.id.dataByCountryResults);
+        searchButton = findViewById(R.id.searchButton);
 
 
         //Event Listener for Stats
@@ -48,6 +53,8 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getStatisticData();
+                //Clear all text from other textview field
+                dataByCountryResults.setText("");
             }
         });
 
@@ -56,6 +63,16 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getNewsData();
+            }
+        });
+
+        //
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDataByCountry();
+                //Clear all text from other textview field
+                statsResults.setText("");
             }
         });
 
@@ -78,24 +95,22 @@ public class Dashboard extends AppCompatActivity {
         call.enqueue(new Callback<StatsResponse>() {
             @Override
             public void onResponse(@NonNull Call<StatsResponse> call, @NonNull Response<StatsResponse> response) {
-                if(!response.isSuccessful()){
-                    //statsResults.setText("Code: " + response.code());
-                    return;
+                if(response.code() == 200) {
+
+                    StatsResponse statsResponse = response.body();
+
+                    assert statsResponse != null;
+
+                    String stringBuilder =
+                            "New Confirmed: " + statsResponse.global.getNewConfirmed() + "\n" +
+                                    "Total Confirmed: " + statsResponse.global.getTotalConfirmed() + "\n" +
+                                    "New Deaths: " + statsResponse.global.getNewDeaths() + "\n" +
+                                    "Total Deaths: " + statsResponse.global.getTotalDeaths() + "\n" +
+                                    "New Recovered: " + statsResponse.global.getNewRecovered() + "\n" +
+                                    "Total Recovered: " + statsResponse.global.getTotalRecovered() + "\n\n";
+
+                    statsResults.setText(stringBuilder);
                 }
-
-                StatsResponse statsResponse = response.body();
-
-                assert statsResponse != null;
-
-                String stringBuilder =
-                        "New Confirmed: " + statsResponse.global.getNewConfirmed() + "\n" +
-                                "Total Confirmed: " + statsResponse.global.getTotalConfirmed() + "\n" +
-                                "New Deaths: " + statsResponse.global.getNewDeaths() + "\n" +
-                                "Total Deaths: " + statsResponse.global.getTotalDeaths() + "\n" +
-                                "New Recovered: " + statsResponse.global.getNewRecovered() + "\n" +
-                                "Total Recovered: " + statsResponse.global.getTotalRecovered() + "\n\n";
-
-                statsResults.setText(stringBuilder);
 
             }
 
@@ -148,6 +163,58 @@ public class Dashboard extends AppCompatActivity {
     }
 //###########################################################################################################################
 
+
+    //Function for getting data by country
+    void getDataByCountry(){
+
+        String countryChoice = countries.getQuery().toString();
+
+        if(countryChoice == null || countryChoice.isEmpty()){
+
+            String warning = "Country name can't be empty!";
+            dataByCountryResults.setText(warning);
+        }
+        else{
+
+            Retrofit retrofit = new  Retrofit.Builder()
+                    .baseUrl("https://api.covid19api.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            DataByCountryAPI dataByCountryAPI = retrofit.create(DataByCountryAPI.class);
+
+            Call<DataByCountryResponse> call = dataByCountryAPI.getDataByCountryResponse(countryChoice + "?", from, to);
+
+            call.enqueue(new Callback<DataByCountryResponse>() {
+                @Override
+                public void onResponse(Call<DataByCountryResponse> call, Response<DataByCountryResponse> response) {
+                    if(response.code() == 200){
+
+                        DataByCountryResponse dataByCountryResponse = response.body();
+
+                        String dataBuilder =
+                                "Country: " + dataByCountryResponse.getCountry() + "\n" +
+                                "Confirmed Cases: " + dataByCountryResponse.getConfirmed() + "\n" +
+                                "Deaths: " + dataByCountryResponse.getDeaths() + "\n" +
+                                "Recovered: " + dataByCountryResponse.getRecovered() + "\n";
+
+                        dataByCountryResults.setText(dataBuilder);
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DataByCountryResponse> call, Throwable t) {
+                    dataByCountryResults.setText(t.getMessage());
+                }
+            });
+
+        }
+
+
+
+
+    }
 
 
 
