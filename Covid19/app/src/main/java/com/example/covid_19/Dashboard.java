@@ -46,7 +46,9 @@ public class Dashboard extends AppCompatActivity {
         statsResults = findViewById(R.id.statsResults);
         dataByCountryResults = findViewById(R.id.dataByCountryResults);
         searchButton = findViewById(R.id.searchButton);
+        newsResults = findViewById(R.id.newsResults);
 
+        //######################################################################
 
         //Event Listener for Stats
         stats.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +60,8 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        //######################################################################
+
         //Event Listener for News
         news.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +70,10 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
-        //
+
+        //######################################################################
+
+        //Button listener for Search By Country
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +85,66 @@ public class Dashboard extends AppCompatActivity {
 
     }
 
+
 //###########################################################################################################################
+
+    //Function for getting data by country
+    void getDataByCountry(){
+
+        String countryChoice = countries.getQuery().toString();
+
+        if(countryChoice.isEmpty()){
+
+            String warning = "Country name can't be empty!";
+
+            dataByCountryResults.setText(warning);
+        }
+        else{
+
+            Retrofit retrofit = new  Retrofit.Builder()
+                    .baseUrl("https://api.covid19api.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            DataByCountryAPI dataByCountryAPI = retrofit.create(DataByCountryAPI.class);
+
+            Call<List<DataByCountryResponse>> call = dataByCountryAPI.getDataByCountryResponse(countryChoice, from, to);
+
+            call.enqueue(new Callback<List<DataByCountryResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<DataByCountryResponse>> call, @NonNull Response<List<DataByCountryResponse>> response) {
+                    if(response.code() == 200){
+
+                        List<DataByCountryResponse> dataByResponse = response.body();
+
+                        assert dataByResponse != null;
+
+                        if(!dataByResponse.isEmpty()) {
+                            DataByCountryResponse dataByCountryResponse = dataByResponse.get(0);
+                            String dataBuilder =
+                                    "Country: " + dataByCountryResponse.getCountry() + "\n" +
+                                            "Confirmed Cases: " + dataByCountryResponse.getConfirmed() + "\n" +
+                                            "Deaths: " + dataByCountryResponse.getDeaths() + "\n" +
+                                            "Recovered: " + dataByCountryResponse.getRecovered() + "\n";
+
+                            dataByCountryResults.setText(dataBuilder);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<DataByCountryResponse>> call, @NonNull Throwable t) {
+                    dataByCountryResults.setText(t.getMessage());
+                }
+            });
+        }
+    }
+
+
+
+//###########################################################################################################################
+
 
     //Function for Getting Stats Data
     void getStatisticData(){
@@ -122,7 +188,9 @@ public class Dashboard extends AppCompatActivity {
     }
 
 
+
 //###########################################################################################################################
+
 
     //Function for Getting News Data
     void getNewsData(){
@@ -134,88 +202,35 @@ public class Dashboard extends AppCompatActivity {
 
         NewsAPI newsAPI = retrofit.create(NewsAPI.class);
 
-        Call<List<NewsResponse>> call = newsAPI.getNewsResponse(country, keyword, page_size, api_key);
+        Call<NewsResponse> call = newsAPI.getNewsResponse(country, keyword, page_size, api_key);
 
-        call.enqueue(new Callback<List<NewsResponse>>() {
+        call.enqueue(new Callback<NewsResponse>() {
             @Override
-            public void onResponse(@NonNull Call<List<NewsResponse>> call, @NonNull Response<List<NewsResponse>> response) {
+            public void onResponse(@NonNull Call<NewsResponse> call, @NonNull Response<NewsResponse> response) {
                 //The HTTP 200 OK success status response code indicates that the request has succeeded.
                 if(response.code() == 200){
 
-                    List<NewsResponse> newsResponse = response.body();
+                    NewsResponse newsResponse = response.body();
 
                     assert newsResponse != null;
 
-                    for(NewsResponse news : newsResponse){
+                    for(Article article : newsResponse.articlesList){
                         String content = "";
-                        content += "Title: " + news.articlesList.get(0).getTitle() + "\n\n";
+                        content += "News Title: " + article.getTitle() + "\n\n";
 
                         newsResults.append(content);
+
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull  Call<List<NewsResponse>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull  Call<NewsResponse> call, @NonNull Throwable t) {
                 newsResults.setText(t.getMessage());
             }
         });
     }
+
+
 //###########################################################################################################################
-
-
-    //Function for getting data by country
-    void getDataByCountry(){
-
-        String countryChoice = countries.getQuery().toString();
-
-        if(countryChoice == null || countryChoice.isEmpty()){
-
-            String warning = "Country name can't be empty!";
-            dataByCountryResults.setText(warning);
-        }
-        else{
-
-            Retrofit retrofit = new  Retrofit.Builder()
-                    .baseUrl("https://api.covid19api.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            DataByCountryAPI dataByCountryAPI = retrofit.create(DataByCountryAPI.class);
-
-            Call<DataByCountryResponse> call = dataByCountryAPI.getDataByCountryResponse(countryChoice + "?", from, to);
-
-            call.enqueue(new Callback<DataByCountryResponse>() {
-                @Override
-                public void onResponse(Call<DataByCountryResponse> call, Response<DataByCountryResponse> response) {
-                    if(response.code() == 200){
-
-                        DataByCountryResponse dataByCountryResponse = response.body();
-
-                        String dataBuilder =
-                                "Country: " + dataByCountryResponse.getCountry() + "\n" +
-                                "Confirmed Cases: " + dataByCountryResponse.getConfirmed() + "\n" +
-                                "Deaths: " + dataByCountryResponse.getDeaths() + "\n" +
-                                "Recovered: " + dataByCountryResponse.getRecovered() + "\n";
-
-                        dataByCountryResults.setText(dataBuilder);
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DataByCountryResponse> call, Throwable t) {
-                    dataByCountryResults.setText(t.getMessage());
-                }
-            });
-
-        }
-
-
-
-
-    }
-
-
-
 }

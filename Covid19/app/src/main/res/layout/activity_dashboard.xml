@@ -9,13 +9,11 @@
 
     <Button
         android:id="@+id/news"
-        android:layout_width="wrap_content"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginLeft="48dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginRight="86dp"
+        android:layout_marginEnd="20dp"
         android:text="Latest News"
         app:layout_constraintEnd_toStartOf="@+id/stats"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +23,10 @@
         android:id="@+id/stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="59dp"
-        android:layout_marginRight="59dp"
-        android:text="Statistics"
+        android:layout_marginEnd="24dp"
+        android:text="Worldwide Statistics"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/news"
         app:layout_constraintTop_toBottomOf="@+id/countries" />
@@ -38,7 +36,7 @@
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="9dp"
         android:textColor="#000"
         app:layout_constraintBottom_toTopOf="@+id/dataByCountryResults"
@@ -60,9 +58,10 @@
         app:layout_constraintTop_toBottomOf="@+id/statsResults" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="240dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stats">
@@ -108,6 +107,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/countries"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="6dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/nestedScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

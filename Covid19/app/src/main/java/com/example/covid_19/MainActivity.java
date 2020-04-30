@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,12 +24,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 
+//THIS ENTIRE SECTION HANDLES ONLY GOOGLE SIGN IN PROCESS
+//https://developers.google.com/identity/sign-in/android/sign-in
+
 public class MainActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     private final static int RC_SIGN_IN = 123;
     private FirebaseAuth mAuth;
 
+    //#############################################################################################
     @Override
     protected void onStart(){
         super.onStart();
@@ -43,24 +45,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //#############################################################################################
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-    // Initialize Firebase Auth
-    mAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
-    createRequest();
+        createRequest();
 
-    findViewById(R.id.google_signIn).setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            signIn();
-        }
-    });
+        findViewById(R.id.google_signIn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
     }
+
+    //#############################################################################################
 
     private void createRequest() {
 
@@ -74,10 +80,15 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
+
+    //#############################################################################################
+
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
+    //#############################################################################################
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    //#############################################################################################
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -111,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Authentication Failed",
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                         // ...
@@ -119,5 +134,5 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
+    //#############################################################################################
 }
