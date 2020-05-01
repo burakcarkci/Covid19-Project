@@ -1,4 +1,4 @@
-# Read Me Template
+# Covid-19 Guide Android Application
 
 ![Project Image](project-image-url)
 
