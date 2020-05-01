@@ -8,6 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
+import com.anychart.enums.Align;
+import com.anychart.enums.LegendLayout;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,8 +31,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Dashboard extends AppCompatActivity {
 
     SearchView countries;
-    Button news, stats, searchButton;
+    Button news, stats, searchButton, chartButton;
     TextView statsResults, newsResults, dataByCountryResults;
+    AnyChartView chartView;
+
+    //AnyChart Data
+    String[] resultTitles = {"Confirmed", "Deaths", "Total Deaths", "Recovered"};
+    int[] resultNumbers = {3022536, 10053, 203333, 922341};
+
+
 
     //Variables for News API
     public static String country = "us";
@@ -47,10 +64,12 @@ public class Dashboard extends AppCompatActivity {
         dataByCountryResults = findViewById(R.id.dataByCountryResults);
         searchButton = findViewById(R.id.searchButton);
         newsResults = findViewById(R.id.newsResults);
+        chartView = findViewById(R.id.chartView);
+        chartButton = findViewById(R.id.chartButton);
 
         //######################################################################
 
-        //Event Listener for Stats
+        //OnClicklistener for Stats
         stats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,18 +81,19 @@ public class Dashboard extends AppCompatActivity {
 
         //######################################################################
 
-        //Event Listener for News
+        //OnClicklistener for News
         news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getNewsData();
+                chartView.setVisibility(View.INVISIBLE);
             }
         });
 
 
         //######################################################################
 
-        //Button listener for Search By Country
+        //OnClicklistener for Search By Country
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +103,66 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        //######################################################################
+
+        //OnClicklistener for Search By Country
+        chartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupPieChart();
+                //Clear all text from other textview field
+                newsResults.setText("");
+            }
+        });
+
     }
+//###########################################################################################################################
+
+    //Function for setting up chart
+    void setupPieChart(){
+
+        chartView.setVisibility(View.VISIBLE);
+
+        Pie pie = AnyChart.pie();
+
+        //List<DataEntry> dataEntries = new ArrayList<>();
+
+        //for(int i = 0; i< resultTitles.length; i++){
+        //    dataEntries.add(new ValueDataEntry(resultTitles[i], resultNumbers[i]));
+        //}
+
+        //pie.data(dataEntries);
+
+
+
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("Apples", 6371664));
+        data.add(new ValueDataEntry("Pears", 789622));
+        data.add(new ValueDataEntry("Bananas", 7216301));
+        data.add(new ValueDataEntry("Grapes", 1486621));
+        data.add(new ValueDataEntry("Oranges", 1200000));
+
+        pie.data(data);
+
+
+        pie.labels().position("outside");
+        pie.title("World Statistics Chart");
+        pie.legend()
+                .position("center-bottom")
+                .itemsLayout(LegendLayout.HORIZONTAL)
+                .align(Align.CENTER);
+
+        pie.draw(true);
+
+        chartView.setChart(pie);
+
+    }
+
+
+
+
+
+
 
 
 //###########################################################################################################################
