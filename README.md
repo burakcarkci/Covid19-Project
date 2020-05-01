@@ -41,7 +41,7 @@ Creating ReadMe's for your Github repository can be tedious.  I hope this templa
 ```html
     <p>dummy code</p>
 ```
-[Back To The Top](#covidApp)
+[Back To The Top](#Covid-19-Guide-Android-Application)
 
 ---
 
