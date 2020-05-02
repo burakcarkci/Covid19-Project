@@ -36,9 +36,9 @@ public class Dashboard extends AppCompatActivity {
     AnyChartView chartView;
 
     //AnyChart Data
-    String[] resultTitles = {"Confirmed", "Deaths", "Total Deaths", "Recovered"};
-    int[] resultNumbers = {3022536, 10053, 203333, 922341};
-
+    static int confirmedPatients;
+    static int totalDeaths;
+    static int recoveredPatients;
 
 
     //Variables for News API
@@ -47,7 +47,7 @@ public class Dashboard extends AppCompatActivity {
     public static String page_size = "99";
     public static String api_key = "cc0ab105fa8d477f82239da2e98fe95b";
 
-    //Variables for Country Data API
+    //Variables for Data By Country API
     public static String from = "2020-04-28";
     public static  String to = "2020-04-29";
 
@@ -125,22 +125,12 @@ public class Dashboard extends AppCompatActivity {
 
         Pie pie = AnyChart.pie();
 
-        //List<DataEntry> dataEntries = new ArrayList<>();
-
-        //for(int i = 0; i< resultTitles.length; i++){
-        //    dataEntries.add(new ValueDataEntry(resultTitles[i], resultNumbers[i]));
-        //}
-
-        //pie.data(dataEntries);
-
-
 
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Apples", 6371664));
-        data.add(new ValueDataEntry("Pears", 789622));
-        data.add(new ValueDataEntry("Bananas", 7216301));
-        data.add(new ValueDataEntry("Grapes", 1486621));
-        data.add(new ValueDataEntry("Oranges", 1200000));
+        data.add(new ValueDataEntry("Confirmed Patients", confirmedPatients));
+        data.add(new ValueDataEntry("T. Deaths", totalDeaths));
+        data.add(new ValueDataEntry("Recovered Patients", recoveredPatients));
+
 
         pie.data(data);
 
@@ -246,6 +236,12 @@ public class Dashboard extends AppCompatActivity {
 
                     assert statsResponse != null;
 
+                    //Data for PIE Chart
+                    confirmedPatients = statsResponse.global.getTotalConfirmed();
+                    totalDeaths = statsResponse.global.getTotalDeaths();
+                    recoveredPatients = statsResponse.global.getTotalRecovered();
+
+                    //Creating a string to show data in textView
                     String stringBuilder =
                             "New Confirmed: " + statsResponse.global.getNewConfirmed() + "\n" +
                                     "Total Confirmed: " + statsResponse.global.getTotalConfirmed() + "\n" +
