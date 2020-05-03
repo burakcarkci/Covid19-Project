@@ -1,17 +1,14 @@
 # Covid-19 Guide Android Application
 
-![Project Image](project-image-url)
+![Project Image](https://i.ibb.co/NsQ0bfG/CovidApp.jpg)
 
-> This is a ReadMe template to help save you time and effort.
+> Welcome to my Covid-19 Guide Android Application repository. 
 
 ---
 
 ### Table of Contents
-You're sections headers will be used to reference location of destination.
-
 - [Description](#description)
 - [How To Use](#how-to-use)
-- [References](#references)
 - [License](#license)
 - [Author Info](#author-info)
 
@@ -19,33 +16,30 @@ You're sections headers will be used to reference location of destination.
 
 ## Description
 
-Creating ReadMe's for your Github repository can be tedious.  I hope this template can save you time and effort as well as provide you with some consistency across your projects.
+Created a Covid-19 Application for people to keep track of statistics, Latest News, Search Specific Location, and Visualize World Statistics about covid-19 patients. 
 
 #### Technologies
 
-- Technology 1
-- Technology 2
+- Android Studio
+- Java
+- Google Sign-In with Firebase
+- Retrofit 2 Rest Client
+- AnyChart cross-platform data visualization library
 
 [Back To The Top](#Covid-19-Guide-Android-Application)
 
 ---
 
 ## How To Use
+Simply signin with your Google account and start using all the features of the application for free.
 
 #### Installation
+Installation via Google Play Store or APK installation from storage.
 
+#### API
+https://covid19api.com
+https://newsapi.org
 
-
-#### API Reference
-
-```html
-    <p>dummy code</p>
-```
-[Back To The Top](#Covid-19-Guide-Android-Application)
-
----
-
-## References
 [Back To The Top](#Covid-19-Guide-Android-Application)
 
 ---
@@ -79,8 +73,6 @@ SOFTWARE.
 ---
 
 ## Author Info
-
-- Twitter - [@jamesqquick](https://twitter.com/jamesqquick)
-- Website - [James Q Quick](https://jamesqquick.com)
+Burak C.
 
 [Back To The Top](#Covid-19-Guide-Android-Application)
