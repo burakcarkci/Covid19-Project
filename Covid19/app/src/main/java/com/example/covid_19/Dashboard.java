@@ -125,15 +125,13 @@ public class Dashboard extends AppCompatActivity {
 
         Pie pie = AnyChart.pie();
 
-
         List<DataEntry> data = new ArrayList<>();
+
         data.add(new ValueDataEntry("Confirmed Patients", confirmedPatients));
         data.add(new ValueDataEntry("T. Deaths", totalDeaths));
         data.add(new ValueDataEntry("Recovered Patients", recoveredPatients));
 
-
         pie.data(data);
-
 
         pie.labels().position("outside");
         pie.title("World Statistics Chart");
@@ -147,11 +145,6 @@ public class Dashboard extends AppCompatActivity {
         chartView.setChart(pie);
 
     }
-
-
-
-
-
 
 
 

@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
 
@@ -43,10 +44,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.android.support:support-annotations:28.0.0'
+
     //Retrofit 2
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-
 
     //Picasso for photo
     implementation 'com.squareup.picasso:picasso:2.71828'
